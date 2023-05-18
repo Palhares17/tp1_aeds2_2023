@@ -10,7 +10,7 @@ typedef unsigned char TipoDib;
 typedef enum {
     Interno, Externo
 } TipoNo;
-typedef struct TipoPatNo* TipoArvore;
+typedef struct TipoPatNo *TipoArvore;
 typedef struct TipoPatNo { 
     TipoNo nt;
     union {
