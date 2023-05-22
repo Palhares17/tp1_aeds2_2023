@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
+// #include <stdlib.h>
+// #include <stdio.h>
 #include <sys/time.h>
-#include "patricia.h"
+#include "../header/patricia.h"
 
 TipoDib Bit(TipoindexAmp i, char* k){
  //  Retorna o i-esimo bit da chave k a partir da esquerda */
