@@ -4,12 +4,12 @@
 #include "patricia.h"
 
 TipoDib Bit(TipoindexAmp i, char* k){
-   //Retorna o i-esimo bit da chave k a partir da esquerda */
+ //  Retorna o i-esimo bit da chave k a partir da esquerda */
   int c, j, l=0;
   if (i == 0)
     return 0;
   else{
-      c = k[l];
+      c = k[i];
      
       for (j = 1; j <= D - i; j++)
       c /= 2;
@@ -103,16 +103,18 @@ TipoArvore Insere(char* k, TipoArvore *t)
         p = p->NO.NInterno.Esq;
     }
     /* acha o primeiro bit diferente */
-    i = 1;
+    i = 0;
 
-    while ((i <= D) & (Bit((int)i, k) == Bit((int)i, p->NO.Chave)))
+    //(i <= D)
+    while ((i < strlen(k)) && (Bit((int)i, k) == Bit((int)i, p->NO.Chave)))
       i++;
     if (i > D)
     {
       printf("Erro: chave ja esta na arvore\n");
       return (*t);
+      
     }
     else
-      return (InsereEntre(k, t, i));
+      return (InsereEntre(k, t, i));      
   }
 }
