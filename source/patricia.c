@@ -43,8 +43,7 @@ TipoArvore CriaNoExt(char* k)
   return p;
 }
 
-void Pesquisa(char* k, TipoArvore t)
-{
+void Pesquisa(char* k, TipoArvore t) {
   if (EExterno(t))
   {
     if (strcmp(k, t->NO.Chave)==0)

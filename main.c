@@ -7,9 +7,14 @@
 
 int main() {
   TipoArvore a = NULL;
-
+  int numArq = 0;
   FILE *arquivo;
   char palavra[MAX_SIZE];
+
+  // printf("QUantidade de arquivos: ");
+  // scanf("%d", &numArq);
+
+  // for (int i = 0; i < numArq; i++) {}
 
   arquivo = fopen("./POCs/cleber.txt", "r");
   if (arquivo == NULL) {
@@ -21,6 +26,10 @@ int main() {
     printf("Inserindo chave: %s\n", palavra);
     a = Insere(palavra, &a);
   }
+
+  printf("\n################# Pesquisando chave: #################\n");
+  char* pesquisaChar = "te";
+  Pesquisa(pesquisaChar, a);
 
   fclose(arquivo);
   return 0;
