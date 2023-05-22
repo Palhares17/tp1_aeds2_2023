@@ -3,19 +3,19 @@
 #include <sys/time.h>
 #include "patricia.h"
 
-TipoDib Bit(TipoindexAmp i, TipoChave k){
+TipoDib Bit(TipoindexAmp i, char* k){
    //Retorna o i-esimo bit da chave k a partir da esquerda */
-  int c, j;
+  int c, j, l=0;
   if (i == 0)
     return 0;
-  else
-  {
-    c = k;
-    for (j = 1; j <= D - i; j++)
+  else{
+      c = k[l];
+     
+      for (j = 1; j <= D - i; j++)
       c /= 2;
-    return (c & 1);
-  }
-};
+      return (c & 1);
+    }
+}
 
 short EExterno(TipoArvore p)
 { /* Verifica se p^ e nodo externo */
@@ -33,20 +33,21 @@ TipoArvore CriaNoInt(int i, TipoArvore *Esq, TipoArvore *Dir)
   return p;
 }
 
-TipoArvore CriaNoExt(TipoChave k)
+TipoArvore CriaNoExt(char* k)
 {
   TipoArvore p;
   p = (TipoArvore)malloc(sizeof(TipoPatNo));
   p->nt = Externo;
+  //strcpy(p->NO.Chave, k);
   p->NO.Chave = k;
   return p;
 }
 
-void Pesquisa(TipoChave k, TipoArvore t)
+void Pesquisa(char* k, TipoArvore t)
 {
   if (EExterno(t))
   {
-    if (k == t->NO.Chave)
+    if (strcmp(k, t->NO.Chave)==0)
       printf("Elemento encontrado\n");
     else
       printf("Elemento nao encontrado\n");
@@ -58,7 +59,7 @@ void Pesquisa(TipoChave k, TipoArvore t)
     Pesquisa(k, t->NO.NInterno.Dir);
 }
 
-TipoArvore InsereEntre(TipoChave k, TipoArvore *t, int i)
+TipoArvore InsereEntre(char* k, TipoArvore *t, int i)
 {
   TipoArvore p;
   if (EExterno(*t) || i < (*t)->NO.NInterno.Index)
@@ -79,10 +80,16 @@ TipoArvore InsereEntre(TipoChave k, TipoArvore *t, int i)
   }
 }
 
-TipoArvore Insere(TipoChave k, TipoArvore *t)
+TipoArvore Insere(char* k, TipoArvore *t)
 {
   TipoArvore p;
-  int i;
+  int i;//D, aux = 0, l = 0;
+
+  /*while (k[l] != '\0')
+      {
+        aux++;
+      }
+      D = aux*8;*/
   if (*t == NULL)
     return (CriaNoExt(k));
   else
@@ -97,6 +104,7 @@ TipoArvore Insere(TipoChave k, TipoArvore *t)
     }
     /* acha o primeiro bit diferente */
     i = 1;
+
     while ((i <= D) & (Bit((int)i, k) == Bit((int)i, p->NO.Chave)))
       i++;
     if (i > D)
@@ -108,50 +116,3 @@ TipoArvore Insere(TipoChave k, TipoArvore *t)
       return (InsereEntre(k, t, i));
   }
 }
-
-// int main(int argc, char *argv[])
-// {
-//   TipoArvore a = NULL;
-//   TipoChave c;
-//   int i, j, k, n;
-//   int min = 32, max = 126;
-//   TipoChave vetor[95];
-//   /* Gera uma permutacao aleatoria de chaves dos caracteres ASCII 32 a  126 */
-//   struct timeval semente;
-//   gettimeofday(&semente, NULL);
-//   srand((int)(semente.tv_sec + 1000000 * semente.tv_usec));
-//   for (i = min; i <= max; i++)
-//     vetor[i - 32] = i;
-//   for (i = min; i <= max; i++)
-//   {
-//     k = min + (int)((float)(max - min) * rand() / (RAND_MAX + 1.0));
-//     j = min + (int)((float)(max - min) * rand() / (RAND_MAX + 1.0));
-//     n = vetor[k - 32];
-//     vetor[k - 32] = vetor[j - 32];
-//     vetor[j - 32] = n;
-//   }
-//   /* Insere cada chave na arvore */
-//   for (i = min; i <= max; i++)
-//   {
-//     c = vetor[i - 32];
-//     printf("Inserindo chave: %c\n", c);
-//     a = Insere(c, &a);
-//   }
-//   /* Gera outra permutacao aleatoria de chaves */
-//   for (i = min; i <= max; i++)
-//   {
-//     k = min + (int)((float)(max - min) * rand() / (RAND_MAX + 1.0));
-//     j = min + (int)((float)(max - min) * rand() / (RAND_MAX + 1.0));
-//     n = vetor[k - 32];
-//     vetor[k - 32] = vetor[j - 32];
-//     vetor[j - 32] = n;
-//   }
-//   /* Pesquisa cada chave na arvore */
-//   for (i = min; i <= max; i++)
-//   {
-//     c = vetor[i - 32];
-//     printf("Pesquisando chave: %c\n", c);
-//     Pesquisa(c, a);
-//   }
-//   return 0;
-// }
