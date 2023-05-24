@@ -29,4 +29,6 @@ TipoArvore CriaNoExt(char* k);
 void Pesquisa(char* k, TipoArvore t);
 TipoArvore InsereEntre(char* k, TipoArvore *t, int i);
 TipoArvore Insere (char* k, TipoArvore *t);
+void printNo(TipoArvore t);
+void printArvore(TipoArvore t);
 

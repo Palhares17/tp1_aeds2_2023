@@ -7,7 +7,7 @@
 
 int main() {
   TipoArvore a = NULL;
-  int numArq = 0;
+  // int numArq = 0;
   FILE *arquivo;
   char palavra[MAX_SIZE];
 
@@ -23,14 +23,14 @@ int main() {
   }
 
   while (fscanf(arquivo, "%s", palavra) == 1) {
-    printf("Inserindo chave: %s\n", palavra);
+    // printf("Inserindo chave: %s\n", palavra);
     a = Insere(palavra, &a);
   }
 
   printf("\n################# Pesquisando chave: #################\n");
   char* pesquisaChar = "te";
-  Pesquisa(pesquisaChar, a);
-
+  // Pesquisa(pesquisaChar, a);
+  printArvore(a);
   fclose(arquivo);
   return 0;
 }
