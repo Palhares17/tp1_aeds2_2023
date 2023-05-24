@@ -6,17 +6,7 @@
 TipoDib Bit(TipoindexAmp i, char *k)
 {
   //  Retorna o i-esimo bit da chave k a partir da esquerda */
-  int c, j;
-  if (i == 0)
-    return 0;
-  else
-  {
-    c = k[i];
-
-    for (j = 1; j <= D - i; j++)
-      c /= 2;
-    return (c & 1);
-  }
+  return k[i];
 }
 
 short EExterno(TipoArvore p)
@@ -24,7 +14,7 @@ short EExterno(TipoArvore p)
   return (p->nt == Externo);
 }
 
-TipoArvore CriaNoInt(int i, TipoArvore *Esq, TipoArvore *Dir)
+TipoArvore CriaNoInt(int i, TipoArvore *Esq, TipoArvore *Dir) 
 {
   TipoArvore p;
   p = (TipoArvore)malloc(sizeof(TipoPatNo));
@@ -45,20 +35,26 @@ TipoArvore CriaNoExt(char *k)
   return p;
 }
 
-void Pesquisa(char *k, TipoArvore t) {
+void Pesquisa(char *k, TipoArvore t)
+{
   printf("palavra pesquisada: %s\n", k);
-  
-  if (EExterno(t)) {
-    if (strncmp(k, t->NO.Chave, strlen(k)) == 0) {
+
+  if (EExterno(t))
+  {
+    if (strncmp(k, t->NO.Chave, strlen(k)) == 0)
+    {
       printf("Elemento encontrado\n");
       printf("%s\n", t->NO.Chave);
-    } else {
+    }
+    else
+    {
       printf("%s\n", t->NO.Chave);
       printf("Elemento nao encontrado\n");
     }
     return;
   }
-  if (Bit(t->NO.NInterno.Index, k) == 0) {
+  if (Bit(t->NO.NInterno.Index, k) == 0)
+  {
     Pesquisa(k, t->NO.NInterno.Esq);
     printf("%s\n", t->NO.Chave);
   }
@@ -66,7 +62,8 @@ void Pesquisa(char *k, TipoArvore t) {
     Pesquisa(k, t->NO.NInterno.Dir);
 }
 
-TipoArvore InsereEntre(char *k, TipoArvore *t, int i) {
+TipoArvore InsereEntre(char *k, TipoArvore *t, int i)
+{
   TipoArvore p;
   if (EExterno(*t) || i < (*t)->NO.NInterno.Index)
   { /* cria um novo no externo */
@@ -86,7 +83,9 @@ TipoArvore InsereEntre(char *k, TipoArvore *t, int i) {
   }
 }
 
-TipoArvore Insere(char *k, TipoArvore *t) {
+TipoArvore Insere(char *k, TipoArvore *t)
+{
+  // printf("Entrou na função insere!!!\n");
   TipoArvore p;
   int i; // D, aux = 0, l = 0;
 
@@ -97,13 +96,22 @@ TipoArvore Insere(char *k, TipoArvore *t) {
       D = aux*8;*/
   if (*t == NULL)
     return (CriaNoExt(k));
-  else {
+  else
+  {
     p = *t;
-    while (!EExterno(p)) {
+    while (!EExterno(p))
+    {
       if (Bit(p->NO.NInterno.Index, k) == 1)
+      {
+        // printf("Palavra incluida: %s\n", k);
         p = p->NO.NInterno.Dir;
+      }
       else
+      {
+        // printf("%s\n", p->NO.Chave);
+        // printf("Palavra incluida: %s\n", k);
         p = p->NO.NInterno.Esq;
+      }
     }
     /* acha o primeiro bit diferente */
     i = 0;
@@ -111,34 +119,36 @@ TipoArvore Insere(char *k, TipoArvore *t) {
     //(i <= D)
     while ((i < strlen(k)) && (Bit((int)i, k) == Bit((int)i, p->NO.Chave)))
       i++;
-    if (i > D) {
+    if (i > D)
+    {
       printf("Erro: chave ja esta na arvore\n");
       return (*t);
     }
     else
       return (InsereEntre(k, t, i));
   }
-  // printf("%s\n", p->NO.Chave);
 }
 
-void printNo(TipoArvore t) {
-    if(t == NULL)
-        printf("No Nulo\n");
-    else if(t->nt == Externo){
-        printf("No{\n Tipo: Externo\n Chave:%s\n};\n",t->NO.Chave);
-    }
-    /*else{
-        printf("No{\n Tipo: Interno\n Indice: %d\n Caractere: %c\n};\n",no->NO.NInterno.Index,no->NO.NInterno.Caractere);
-    }*/
+void printNo(TipoArvore t)
+{
+  if (t == NULL)
+    printf("No Nulo\n");
+  else if (t->nt == Externo)
+  {
+    printf("No{\n Tipo: Externo\n Chave:%s\n};\n", t->NO.Chave);
+  }
+  /*else{
+    printf("No{\n Tipo: Interno\n Indice: %d\n Caractere: %c\n};\n",no->NO.NInterno.Index,no->NO.NInterno.Caractere);
+  }*/
 }
 
-
-void printArvore(TipoArvore t) {
-    if(t == NULL)
-        return;
-    if(!EExterno(t))
-        printArvore(t->NO.NInterno.Esq);
-    printNo(t);
-    if(!EExterno(t))
-        printArvore(t->NO.NInterno.Dir);
+void printArvore(TipoArvore t)
+{
+  if (t == NULL)
+    return;
+  if (!EExterno(t))
+    printArvore(t->NO.NInterno.Esq);
+  printNo(t);
+  if (!EExterno(t))
+    printArvore(t->NO.NInterno.Dir);
 }

@@ -28,7 +28,7 @@ int main() {
   }
 
   printf("\n################# Pesquisando chave: #################\n");
-  char* pesquisaChar = "te";
+  // char* pesquisaChar = "te";
   // Pesquisa(pesquisaChar, a);
   printArvore(a);
   fclose(arquivo);
