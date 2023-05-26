@@ -1,36 +1,41 @@
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
 #include "./header/patricia.h"
 
-#define MAX_SIZE 100
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define tam 200
 
 int main() {
-  TipoArvore a = NULL;
-  // int numArq = 0;
-  FILE *arquivo;
-  char palavra[MAX_SIZE];
+    Apontador arvore = NULL; // Inicializa a árvore como vazia
 
-  // printf("QUantidade de arquivos: ");
-  // scanf("%d", &numArq);
+    char palavra[tam];
 
-  // for (int i = 0; i < numArq; i++) {}
+    FILE *f;
+    
+    char arquivo[] = "./POCs/gabriel.txt";
 
-  arquivo = fopen("./POCs/cleber.txt", "r");
-  if (arquivo == NULL) {
-    printf("Erro ao abrir o arquivo.\n");
-    return 1;
-  }
+    f = fopen(arquivo, "r");
 
-  while (fscanf(arquivo, "%s", palavra) == 1) {
-    // printf("Inserindo chave: %s\n", palavra);
-    a = Insere(palavra, &a);
-  }
+    if (f == NULL) {
+        printf("Erro ao abrir arquivo %s\t", arquivo);
+        return 1;
+    }
 
-  printf("\n################# Pesquisando chave: #################\n");
-  char* pesquisaChar = "te";
-  // Pesquisa(pesquisaChar, a);
-  printArvore(a);
-  fclose(arquivo);
-  return 0;
+    while (fscanf(f, "%s ", palavra) == 1) {
+        arvore = Insere(palavra, &arvore);
+        print(arvore);
+    }
+
+    // printf("\n################# Pesquisando chave: #################\n");
+    // char* pesquisaChar = "te";
+    // Pesquisa(pesquisaChar, a);
+
+    // int i = 0;
+    // while(i < 5){
+    //     print(arvore);
+    //     i++;
+    // }
+
+    return 0;
 }

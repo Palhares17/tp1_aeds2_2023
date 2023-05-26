@@ -3,142 +3,154 @@
 #include <sys/time.h>
 #include "../header/patricia.h"
 
-TipoDib Bit(TipoindexAmp i, char *k)
-{
-  //  Retorna o i-esimo bit da chave k a partir da esquerda */
-  int c, j;
-  if (i == 0)
-    return 0;
-  else
-  {
-    c = k[i];
 
-    for (j = 1; j <= D - i; j++)
-      c /= 2;
-    return (c & 1);
-  }
+char Caractere(int i, String k) {
+  	return k[i];
 }
 
-short EExterno(TipoArvore p)
-{ /* Verifica se p^ e nodo externo */
-  return (p->nt == Externo);
+short EExterno(Apontador p) {
+  	return p->TNo == Externo;
 }
 
-TipoArvore CriaNoInt(int i, TipoArvore *Esq, TipoArvore *Dir)
-{
-  TipoArvore p;
-  p = (TipoArvore)malloc(sizeof(TipoPatNo));
-  p->nt = Interno;
-  p->NO.NInterno.Esq = *Esq;
-  p->NO.NInterno.Dir = *Dir;
-  p->NO.NInterno.Index = i;
-  return p;
+short EInterno(Apontador p) {
+  	return p->TNo == Interno;
 }
 
-TipoArvore CriaNoExt(char *k)
-{
-  TipoArvore p;
-  p = (TipoArvore)malloc(sizeof(TipoPatNo));
-  p->nt = Externo;
-  // strcpy(p->NO.Chave, k);
-  p->NO.Chave = k;
-  return p;
+Apontador CriaNoInt(int i, Apontador *Esq,  Apontador *Dir, char Caractere) { 
+	Apontador p;
+    p = (Apontador)malloc(sizeof(TipoPatNo));  
+
+    p->TNo = Interno;
+    p->NO.NInterno.Esq = *Esq;
+    p->NO.NInterno.Dir = *Dir;
+
+    p->NO.NInterno.Index = i;
+    p->NO.NInterno.caractere = Caractere;
+
+    return p;
 }
 
-void Pesquisa(char *k, TipoArvore t) {
-  printf("palavra pesquisada: %s\n", k);
-  
-  if (EExterno(t)) {
-    if (strncmp(k, t->NO.Chave, strlen(k)) == 0) {
-      printf("Elemento encontrado\n");
-      printf("%s\n", t->NO.Chave);
-    } else {
-      printf("%s\n", t->NO.Chave);
-      printf("Elemento nao encontrado\n");
+Apontador CriaNoExt(String k, Apontador *t) {
+	Apontador p;
+    p = (Apontador)malloc(sizeof(TipoPatNo));
+    p->TNo = Externo;
+
+    p->NO.Chave = (String)malloc(strlen(k) * sizeof(char));
+    strcpy(p->NO.Chave, k);
+ 
+    return *t;
+}
+
+Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
+	Apontador p;
+
+    if (EExterno(*t)) {
+        p = CriaNoExt(k, &p);
+        /* cria um novo no externo */
+        if (strcmp((*t)->NO.Chave, k) < 0) {
+           return (CriaNoInt(i, t, &p, diff));
+        }
+        else {
+           return (CriaNoInt(i, &p, t, diff));
+        }
     }
-    return;
-  }
-  if (Bit(t->NO.NInterno.Index, k) == 0) {
-    Pesquisa(k, t->NO.NInterno.Esq);
-    printf("%s\n", t->NO.Chave);
-  }
-  else
-    Pesquisa(k, t->NO.NInterno.Dir);
-}
 
-TipoArvore InsereEntre(char *k, TipoArvore *t, int i) {
-  TipoArvore p;
-  if (EExterno(*t) || i < (*t)->NO.NInterno.Index)
-  { /* cria um novo no externo */
-    p = CriaNoExt(k);
-    if (Bit(i, k) == 1)
-      return (CriaNoInt(i, t, &p));
-    else
-      return (CriaNoInt(i, &p, t));
-  }
-  else
-  {
-    if (Bit((*t)->NO.NInterno.Index, k) == 1)
-      (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i);
-    else
-      (*t)->NO.NInterno.Esq = InsereEntre(k, &(*t)->NO.NInterno.Esq, i);
+    else if (i < (*t)->NO.NInterno.Index) {
+        CriaNoExt(k, &p);
+
+        if (k[i] < diff) {
+            return (CriaNoInt(i, &p, t, diff));
+        } 
+        else {
+            return (CriaNoInt(i, t, &p, diff));
+        }
+    }
+
+    else {
+        int i = (*t)->NO.NInterno.Index;
+
+        if (Caractere((*t)->NO.NInterno.Index, k) >= (*t)->NO.NInterno.caractere) {
+            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff);
+        }
+        else {
+            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff);
+        }
+    }
+
     return (*t);
-  }
 }
 
-TipoArvore Insere(char *k, TipoArvore *t) {
-  TipoArvore p;
-  int i; // D, aux = 0, l = 0;
+Apontador Insere(String k, Apontador *t) {
+    Apontador p;
+    int i;
+    char caractere;
+    char charDiff;
 
-  /*while (k[l] != '\0')
-      {
-        aux++;
-      }
-      D = aux*8;*/
-  if (*t == NULL)
-    return (CriaNoExt(k));
-  else {
-    p = *t;
-    while (!EExterno(p)) {
-      if (Bit(p->NO.NInterno.Index, k) == 1)
-        p = p->NO.NInterno.Dir;
-      else
-        p = p->NO.NInterno.Esq;
+    // printf("Entrou na funcao!!!"); 
+    if (*t == NULL) {
+        return (CriaNoExt(k, &p));
     }
-    /* acha o primeiro bit diferente */
-    i = 0;
 
-    //(i <= D)
-    while ((i < strlen(k)) && (Bit((int)i, k) == Bit((int)i, p->NO.Chave)))
-      i++;
-    if (i > D) {
-      printf("Erro: chave ja esta na arvore\n");
-      return (*t);
+    else {
+        p = (*t);
+
+        while (!EExterno(p)) { // Verifica se é interno 
+            if (p->NO.NInterno.Index > strlen(k)) {
+                caractere = k[strlen(k)];
+            }
+            else {
+                caractere = Caractere(p->NO.NInterno.Index, k);
+            }
+
+            if (caractere < p->NO.NInterno.caractere) {
+                p = p->NO.NInterno.Esq;
+            }
+            else {
+                p = p->NO.NInterno.Dir;
+            }
+        }
+
+        if (strcmp(p->NO.Chave, k) == 0) {
+            printf("A palavra já está na arvore: %s\n", p->NO.Chave);
+            return (*t);
+        }
+        else {
+            i = 0;
+
+            while (Caractere(i, k) == Caractere(i, p->NO.Chave)) i++;
+
+            if (Caractere(i, k) >  Caractere(i, p->NO.Chave)) {
+                charDiff = k[i];
+            }
+            else {
+                charDiff = k[i];
+            }
+
+            return InsereEntre(k, t, i, charDiff);
+        }
     }
-    else
-      return (InsereEntre(k, t, i));
-  }
-  // printf("%s\n", p->NO.Chave);
 }
 
-void printNo(TipoArvore t) {
-    if(t == NULL)
-        printf("No Nulo\n");
-    else if(t->nt == Externo){
-        printf("No{\n Tipo: Externo\n Chave:%s\n};\n",t->NO.Chave);
+void Pesquisa(String k, Apontador t) {
+    if (t == NULL) printf("Arvore está vazia!!!");
+
+	if (EExterno(t)) {
+		if (strncmp(k, t->NO.Chave, strlen(k)) == 0) {
+			printf("Palavra %s encontrada:\n", t->NO.Chave);
+		}
+	}
+    else {
+        Pesquisa(k, t->NO.NInterno.Esq);
+        Pesquisa(k, t->NO.NInterno.Dir);
     }
-    /*else{
-        printf("No{\n Tipo: Interno\n Indice: %d\n Caractere: %c\n};\n",no->NO.NInterno.Index,no->NO.NInterno.Caractere);
-    }*/
 }
 
+void print(Apontador t) {
+    if (t == NULL) return;
 
-void printArvore(TipoArvore t) {
-    if(t == NULL)
-        return;
-    if(!EExterno(t))
-        printArvore(t->NO.NInterno.Esq);
-    printNo(t);
-    if(!EExterno(t))
-        printArvore(t->NO.NInterno.Dir);
+    if (!EExterno(t)) print(t->NO.NInterno.Esq);
+    
+    printf("%s\n", t->NO.Chave);
+
+    if(!EExterno(t)) print(t->NO.NInterno.Dir);
 }

@@ -1,34 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#define TRUE 1
+#define FALSE !TRUE
 #define D 8 /* depende de TipoChave */
 
-typedef unsigned char* TipoChave; /* a definir*/
-typedef unsigned char TipoindexAmp; 
-typedef unsigned char TipoDib;
+typedef char *String;
+
 typedef enum {
-    Interno, Externo
+    Interno,
+    Externo
 } TipoNo;
-typedef struct TipoPatNo *TipoArvore;
-typedef struct TipoPatNo { 
-    TipoNo nt;
+
+typedef struct TipoPatNo *Apontador;
+typedef struct TipoPatNo {
+    TipoNo TNo;
     union {
-        struct {
-            TipoindexAmp Index;
-            TipoArvore Esq, Dir;
+        struct { 
+            short Index;
+            char caractere;
+            Apontador Esq, Dir;
         } NInterno;
-        char* Chave;
+        String Chave;
     } NO;
 } TipoPatNo;
 
-TipoDib Bit (TipoindexAmp i, char* k);
-short EExterno (TipoArvore p);
-TipoArvore CriaNolnt(int i, TipoArvore *Esq, TipoArvore *Dir);
-TipoArvore CriaNoExt(char* k);
-void Pesquisa(char* k, TipoArvore t);
-TipoArvore InsereEntre(char* k, TipoArvore *t, int i);
-TipoArvore Insere (char* k, TipoArvore *t);
-void printNo(TipoArvore t);
-void printArvore(TipoArvore t);
-
+char Caractere(int i, String k);
+short EExterno(Apontador p);
+short EInterno(Apontador p);
+Apontador CriaNoInt(int i, Apontador *Esq,  Apontador *Dir, char Caractere);
+Apontador CriaNoExt(String k, Apontador *t);
+Apontador InsereEntre(String k, Apontador *t, int i, char diff);
+void Pesquisa(String k, Apontador t);
+Apontador Insere(String k, Apontador *t);
+void print(Apontador t);
