@@ -1,7 +1,31 @@
 // #include <stdlib.h>
 // #include <stdio.h>
-#include <sys/time.h>
-#include "../header/patricia.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define TRUE 1
+#define FALSE !TRUE
+#define D 8 /* depende de TipoChave */
+
+typedef char *String;
+
+typedef enum {
+    Interno,
+    Externo
+} TipoNo;
+
+typedef struct TipoPatNo *Apontador;
+typedef struct TipoPatNo {
+    TipoNo TNo;
+    union {
+        struct { 
+            short Index;
+            char caractere;
+            Apontador Esq, Dir;
+        } NInterno;
+        String Chave;
+    } NO;
+} TipoPatNo;
 
 
 char Caractere(int i, String k) {
