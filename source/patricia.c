@@ -134,7 +134,7 @@ Apontador Insere(String k, Apontador *t) {
             }
         }
 
-        if (strcmp(p->NO.Chave, k) == 0) {
+        if (strncmp(k, p->NO.Chave, strlen(k)) == 0) {
             printf("A palavra já está na arvore: %s\n", p->NO.Chave);
             return (*t);
         }
