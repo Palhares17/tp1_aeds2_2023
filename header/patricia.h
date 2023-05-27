@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 #define tam 200
-#define MAX_ARQUIVOS 2
+#define MAX_ARQUIVOS 50
 
 typedef char* String;
 typedef struct TipoPatNo* Apontador;

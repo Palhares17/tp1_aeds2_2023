@@ -143,7 +143,7 @@ void Pesquisa(String k, Apontador t) {
             printf("Palavra %s encontrada:\n", t->NO.Chave);
             for (int i = 0; i < MAX_ARQUIVOS; i++) {
                 if (t->contagem[i] > 0) {
-                    printf("<%d,%d> ", i + 1, t->contagem[i]);
+                    printf("<%d,%d> ", t->contagem[i],  i + 1);
                 }
             }
             printf("\n");
@@ -164,7 +164,7 @@ void ImprimirPalavras(Apontador t) {
         printf("Palavra: %s ", t->NO.Chave);
         for (int i = 0; i < MAX_ARQUIVOS; i++) {
             if (t->contagem[i] > 0) {
-                printf("<%d,%d> ", i + 1, t->contagem[i]);
+                printf("<%d,%d> ", t->contagem[i],  i + 1);
             }
 
         }
