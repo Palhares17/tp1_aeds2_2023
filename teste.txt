@@ -1,4 +1,46 @@
-#include "../header/patricia.h"
+#define tam 200
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TRUE 1
+#define FALSE 0
+#define D 8 /* depende de TipoChave */
+
+typedef char* String;
+typedef struct TipoPatNo* Apontador;
+typedef unsigned char TipoIndexAmp;
+
+typedef enum {
+    Interno,
+    Externo
+} TipoNo;
+
+typedef struct TipoPatNo {
+    TipoNo TNo;
+    union {
+        struct {
+            TipoIndexAmp Index;
+            char caractere;
+            Apontador Esq, Dir;
+        } NInterno;
+        String Chave;
+    } NO;
+} TipoPatNo;
+
+
+char Caractere(int i, String k);
+
+short EExterno(Apontador p);
+
+short EInterno(Apontador p);
+Apontador CriaNoInt(int i, Apontador *Esq, Apontador *Dir, char Caractere);
+Apontador CriaNoExt(String k, Apontador *t);
+Apontador InsereEntre(String k, Apontador *t, int i, char diff);
+Apontador Insere(String k, Apontador *t);
+void Pesquisa(String k, Apontador t);
+void ImprimirPalavras(Apontador t);
 
 char Caractere(int i, String k) {
     return k[i];
@@ -23,24 +65,21 @@ Apontador CriaNoInt(int i, Apontador *Esq, Apontador *Dir, char Caractere) {
     return p;
 }
 
-Apontador CriaNoExt(String k, Apontador *t, int idDoc) {
+Apontador CriaNoExt(String k, Apontador *t) {
     Apontador p;
     p = (Apontador)malloc(sizeof(TipoPatNo));
     p->TNo = Externo;
     p->NO.Chave = (String)malloc((strlen(k) + 1) * sizeof(char));
     strcpy(p->NO.Chave, k);
-    for (int i = 0; i < MAX_ARQUIVOS; i++) {
-        p->contagem[i] = 0;
-    }
-    p->contagem[idDoc - 1] = 1;
     return p;
 }
 
-Apontador InsereEntre(String k, Apontador *t, int i, char diff, int idDoc) {
+Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
     Apontador p;
 
     if (EExterno(*t)) {
-        p = CriaNoExt(k, &p, idDoc);
+        p = CriaNoExt(k, &p);
+        /* cria um novo no externo */
         if (strcmp((*t)->NO.Chave, k) < 0) {
             return (CriaNoInt(i, t, &p, diff));
         }
@@ -49,7 +88,7 @@ Apontador InsereEntre(String k, Apontador *t, int i, char diff, int idDoc) {
         }
     }
     else if (i < (*t)->NO.NInterno.Index) {
-        p = CriaNoExt(k, &p, idDoc);
+        p = CriaNoExt(k, &p);
         if (k[i] < diff) {
             return (CriaNoInt(i, &p, t, diff));
         }
@@ -60,29 +99,24 @@ Apontador InsereEntre(String k, Apontador *t, int i, char diff, int idDoc) {
     else {
         int index = (*t)->NO.NInterno.Index;
         if (Caractere(index, k) >= (*t)->NO.NInterno.caractere) {
-            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff, idDoc);
+            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff);
         }
         else {
-            (*t)->NO.NInterno.Esq = InsereEntre(k, &(*t)->NO.NInterno.Esq, i, diff, idDoc);
+            (*t)->NO.NInterno.Esq = InsereEntre(k, &(*t)->NO.NInterno.Esq, i, diff);
         }
     }
 
     return (*t);
 }
 
-Apontador Insere(String k, Apontador *t, int idDoc) {
+Apontador Insere(String k, Apontador *t) {
     Apontador p;
     int i;
     char caractere;
     char charDiff;
 
-    if (strlen(k) < 3) {
-        //printf("A palavra '%s' não possui 3 ou mais letras e será ignorada.\n", k);
-        return (*t);
-    }
-
     if (*t == NULL) {
-        return (CriaNoExt(k, &p, idDoc));
+        return (CriaNoExt(k, &p));
     }
     else {
         p = *t;
@@ -103,20 +137,19 @@ Apontador Insere(String k, Apontador *t, int idDoc) {
             }
         }
 
-        if (strcasecmp(k, p->NO.Chave) == 0) {
+        if (strcmp(k, p->NO.Chave) == 0) {
             printf("A palavra já está na árvore: %s\n", p->NO.Chave);
-            p->contagem[idDoc - 1]++;
             return (*t);
         }
         else {
             i = 0;
 
-            while (i < strlen(k) && tolower(Caractere(i, k)) == tolower(Caractere(i, p->NO.Chave))) {
+            while (i < strlen(k) && Caractere(i, k) == Caractere(i, p->NO.Chave)) {
                 i++;
             }
 
             if (i < strlen(k)) {
-                if (tolower(Caractere(i, k)) > tolower(Caractere(i, p->NO.Chave))) {
+                if (Caractere(i, k) > Caractere(i, p->NO.Chave)) {
                     charDiff = k[i];
                 }
                 else {
@@ -127,7 +160,7 @@ Apontador Insere(String k, Apontador *t, int idDoc) {
                 charDiff = '\0';
             }
 
-            return InsereEntre(k, t, i, charDiff, idDoc);
+            return InsereEntre(k, t, i, charDiff);
         }
     }
 }
@@ -139,14 +172,8 @@ void Pesquisa(String k, Apontador t) {
     }
 
     if (EExterno(t)) {
-        if (strncasecmp(k, t->NO.Chave, strlen(k)) == 0) {
+        if (strncmp(k, t->NO.Chave, strlen(k)) == 0) {
             printf("Palavra %s encontrada:\n", t->NO.Chave);
-            for (int i = 0; i < MAX_ARQUIVOS; i++) {
-                if (t->contagem[i] > 0) {
-                    printf("<%d,%d> ", i + 1, t->contagem[i]);
-                }
-            }
-            printf("\n");
         }
     }
     else {
@@ -161,17 +188,37 @@ void ImprimirPalavras(Apontador t) {
     }
 
     if (EExterno(t)) {
-        printf("Palavra: %s ", t->NO.Chave);
-        for (int i = 0; i < MAX_ARQUIVOS; i++) {
-            if (t->contagem[i] > 0) {
-                printf("<%d,%d> ", i + 1, t->contagem[i]);
-            }
-
-        }
-        printf("\n");
+        printf("%s\n", t->NO.Chave);
     }
     else {
         ImprimirPalavras(t->NO.NInterno.Esq);
         ImprimirPalavras(t->NO.NInterno.Dir);
     }
+}
+
+int main() {
+    Apontador arvore = NULL; // Inicializa a árvore como vazia
+
+    char palavra[tam];
+
+    FILE* f;
+
+    char arquivo[] = "./POCs/gabriel.txt";
+
+    f = fopen(arquivo, "r");
+
+    if (f == NULL) {
+        printf("Erro ao abrir arquivo %s\n", arquivo);
+        return 1;
+    }
+
+    while (fscanf(f, "%s", palavra) == 1) {
+        arvore = Insere(palavra, &arvore);
+    }
+
+    ImprimirPalavras(arvore);
+
+    fclose(f);
+
+    return 0;
 }

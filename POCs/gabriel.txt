@@ -1,2 +1,18 @@
 
-john was an adventurous boy every day he would explore the forest one day he found a mysterious tree he went back home but curiosity led him back tree tree tree as he touched it a portal opened john john john entered and discovered a magical world adventures adventures adventures awaited him
+Analisando o Impacto dos Bots Durante a Eleição Presidencial Brasileira de 2018 
+com Base nos Comentários do YouTube
+
+A tendência de discutir política em Redes Sociais Online (RSOs) tem crescido 
+cada vez mais, especialmente em períodos eleitorais. Esse crescimento pode ser 
+justificado pelo formato pouco restritivo das informações a serem publicadas e 
+também pelo fato de muitos políticos conduzirem suas campanhas nessas redes 
+devido à limitação do tempo gratuito de propaganda política. De acordo com 
+essa tendência e a grande quantidade de dados gerados pelos usuários dessas 
+redes sociais, o objetivo deste trabalho é analisar o impacto dos bots durante 
+a candidatura de Fernando Haddad e Jair Messias Bolsonaro na eleição 
+presidencial brasileira de 2018 e, adicionalmente, seus possíveis eleitores, 
+utilizando comentários coletados do YouTube. Nossos resultados demonstram que, 
+considerando todos os usuários únicos do conjunto de dados coletado, 
+aproximadamente 71,44% deles foram considerados indecisos, 17,67% como 
+possíveis eleitores de Bolsonaro e 10,89% como possíveis eleitores de 
+Haddad, sem evidências de manipulação política por bots.
