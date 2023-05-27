@@ -1,5 +1,4 @@
 #include "header/patricia.h"
-#include "source/patricia.c"
 
 
 #define tam 200

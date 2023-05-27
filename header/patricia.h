@@ -63,3 +63,16 @@ typedef struct TipoPatNo {
         String Chave;
     } NO;
 } TipoPatNo;
+
+
+char Caractere(int i, String k);
+
+short EExterno(Apontador p);
+
+short EInterno(Apontador p);
+Apontador CriaNoInt(int i, Apontador *Esq, Apontador *Dir, char Caractere);
+Apontador CriaNoExt(String k, Apontador *t);
+Apontador InsereEntre(String k, Apontador *t, int i, char diff);
+Apontador Insere(String k, Apontador *t);
+void Pesquisa(String k, Apontador t);
+void ImprimirPalavras(Apontador t);
