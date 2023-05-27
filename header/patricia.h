@@ -34,3 +34,32 @@
 // void Pesquisa(String k, Apontador t);
 // Apontador Insere(String k, Apontador *t);
 // void print(Apontador t);
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TRUE 1
+#define FALSE 0
+#define D 8 /* depende de TipoChave */
+
+typedef char* String;
+typedef struct TipoPatNo* Apontador;
+typedef unsigned char TipoIndexAmp;
+
+typedef enum {
+    Interno,
+    Externo
+} TipoNo;
+
+typedef struct TipoPatNo {
+    TipoNo TNo;
+    union {
+        struct {
+            TipoIndexAmp Index;
+            char caractere;
+            Apontador Esq, Dir;
+        } NInterno;
+        String Chave;
+    } NO;
+} TipoPatNo;
