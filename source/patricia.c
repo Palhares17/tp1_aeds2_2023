@@ -1,32 +1,4 @@
-// #include <stdlib.h>
-// #include <stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#define TRUE 1
-#define FALSE !TRUE
-#define D 8 /* depende de TipoChave */
-
-typedef char *String;
-
-typedef enum {
-    Interno,
-    Externo
-} TipoNo;
-
-typedef struct TipoPatNo *Apontador;
-typedef struct TipoPatNo {
-    TipoNo TNo;
-    union {
-        struct { 
-            short Index;
-            char caractere;
-            Apontador Esq, Dir;
-        } NInterno;
-        String Chave;
-    } NO;
-} TipoPatNo;
-
+#include "../header/patricia.h"
 
 char Caractere(int i, String k) {
   	return k[i];
@@ -61,8 +33,8 @@ Apontador CriaNoExt(String k, Apontador *t) {
 
     p->NO.Chave = (String)malloc(strlen(k) * sizeof(char));
     strcpy(p->NO.Chave, k);
- 
-    return *t;
+
+    return p;
 }
 
 Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
@@ -71,7 +43,7 @@ Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
     if (EExterno(*t)) {
         p = CriaNoExt(k, &p);
         /* cria um novo no externo */
-        if (strcmp((*t)->NO.Chave, k) < 0) {
+        if (strcmp((*t)->NO.Chave, k) <= 0) {
            return (CriaNoInt(i, t, &p, diff));
         }
         else {
@@ -89,7 +61,7 @@ Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
             return (CriaNoInt(i, t, &p, diff));
         }
     }
-
+    
     else {
         int i = (*t)->NO.NInterno.Index;
 
@@ -116,7 +88,7 @@ Apontador Insere(String k, Apontador *t) {
     }
 
     else {
-        p = (*t);
+        p = *t;
 
         while (!EExterno(p)) { // Verifica se é interno 
             if (p->NO.NInterno.Index > strlen(k)) {
@@ -134,7 +106,7 @@ Apontador Insere(String k, Apontador *t) {
             }
         }
 
-        if (strcmp(p->NO.Chave, k) == 0) {
+        if (strcmp(k, p->NO.Chave) == 0) {
             printf("A palavra já está na arvore: %s\n", p->NO.Chave);
             return (*t);
         }
@@ -170,11 +142,13 @@ void Pesquisa(String k, Apontador t) {
 }
 
 void print(Apontador t) {
-    if (t == NULL) return;
+    if (t == NULL)
+        return;
 
-    if (!EExterno(t)) print(t->NO.NInterno.Esq);
-    
-    printf("%s\n", t->NO.Chave);
-
-    if(!EExterno(t)) print(t->NO.NInterno.Dir);
+    if (EExterno(t))
+        printf("%s\n", t->NO.Chave);
+    else {
+        print(t->NO.NInterno.Esq);
+        print(t->NO.NInterno.Dir);
+    }
 }
