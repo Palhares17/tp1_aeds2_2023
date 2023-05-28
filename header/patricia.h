@@ -50,4 +50,3 @@ void Pesquisa(String k, Apontador t);
 void ImprimirPalavras(Apontador t);
 
 void CalcularRelevancia(int numDocumentos, Apontador t, String termo);
-//void CalcularRelevancia(String termo1, Apontador t);
