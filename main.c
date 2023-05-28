@@ -88,9 +88,14 @@ int main() {
         idDoc++;
     }
 
-    ImprimirPalavras(arvore);
+    // ImprimirPalavras(arvore);
 
-    Pesquisa("tendencia", arvore);
+    // Pesquisa("tendencia", arvore);
+
+    char termo[tam];
+    printf("Digite o termo de busca: ");
+    scanf("%s", termo);
+    CalcularRelevancia(numArquivos, arvore, termo);
 
     for (int i = 0; i < numArquivos; i++) {
         fclose(f[i]);

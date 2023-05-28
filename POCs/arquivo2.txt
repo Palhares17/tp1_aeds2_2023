@@ -1,14 +1,17 @@
-Improving Rule Based and Equivalent Decision Simplifications for Bloat Control in Genetic
-Programming Using a Dynamic Operator 
-Bloat is a common issue regarding Genetic Programming (GP), specially noted in Symbolic
-Regression (SR) problems. Due to this, GP tends to generate a huge amount of ineffective code
-that could be avoided or removed. Code editing is one of many approaches to avoid bloat. The
-objective in this strategy is to mutate or remove sub-trees which do not contribute to the final
-solution. Two known methods of redundant code removal, the Rule Based Simplification (RBS) and
-Equivalent Decision Simplification (EDS) are extended in a new opera- tor presented in this
-paper, called Dynamic Operator with RBS and EDS (DORE). This operator gives the algebraic
-simplification table used by RBS the potential to learn from reductions performed by EDS. An
-initial benchmark highlighted how the RBS table can grow as much as 86% with DORE, and reducing
-the time spent on simplification by 16.83%. Experiments with the other three SR problems were
-performed showing a considerable improvement on fitness of the generated programs, besides a
-slight reduction in the population of the average tree size.
+Analisando o Impacto dos Bots Durante a Eleição Presidencial Brasileira de 2018 
+com Base nos Comentários do 
+
+A tendência de discutir política em Redes Sociais Online (RSOs) tem crescido Analisando Analisando analisando
+cada vez mais, especialmente em períodos eleitorais. Esse crescimento pode ser 
+justificado pelo formato pouco restritivo das informações a serem publicadas e 
+também pelo fato de muitos políticos conduzirem suas campanhas nessas redes 
+devido à limitação do tempo gratuito de propaganda política. De acordo com 
+essa tendência e a grande quantidade de dados gerados pelos usuários dessas 
+redes sociais, o objetivo deste trabalho é analisar o impacto dos bots durante 
+a candidatura de Fernando Haddad e Jair Messias Bolsonaro na eleição 
+presidencial brasileira de 2018 e, adicionalmente, seus possíveis eleitores, 
+utilizando comentários coletados do YouTube . Nossos resultados demonstram que, 
+considerando todos os usuários únicos do conjunto de dados coletado, 
+aproximadamente 71,44% deles foram considerados indecisos, 17,67% como 
+possíveis eleitores de Bolsonaro e 10,89% como possíveis eleitores de 
+Haddad, sem evidências de manipulação política por bots.

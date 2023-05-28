@@ -175,3 +175,81 @@ void ImprimirPalavras(Apontador t) {
         ImprimirPalavras(t->NO.NInterno.Dir);
     }
 }
+
+void CalcularRelevancia(int numDocumentos, Apontador t, String termo) {
+    // Verificar se a árvore está vazia
+    if (t == NULL) {
+        printf("A árvore está vazia!!!\n");
+        return;
+    }
+
+    // Inicializar as variáveis para o cálculo de relevância
+    int q = strlen(termo); // Número de termos na consulta
+    int N = numDocumentos; // Número total de documentos
+
+    // Percorrer a árvore e buscar o termo
+    Apontador p = t;
+    while (!EExterno(p)) {
+        int index = p->NO.NInterno.Index;
+        if (Caractere(index, termo) >= p->NO.NInterno.caractere) {
+            p = p->NO.NInterno.Dir;
+        } else {
+            p = p->NO.NInterno.Esq;
+        }
+    }
+
+    // Verificar se o termo foi encontrado na árvore
+    if (strncasecmp(termo, p->NO.Chave, strlen(termo)) == 0) {
+        printf("Termo '%s' encontrado:\n", p->NO.Chave);
+        for (int i = 0; i < numDocumentos; i++) {
+            int f = p->contagem[i]; // Número de ocorrências do termo no documento
+            double w = f * log(N) / q; // Cálculo da relevância
+            if (f > 0) {
+                printf("Documento %d: relevância %.2f\n", i + 1, w);
+            }
+        }
+    } else {
+        printf("Termo '%s' não encontrado na árvore.\n", termo);
+    }
+}
+
+// void CalcularRelevancia(String termo1, Apontador t) {
+//     if (t == NULL) {
+//         printf("A árvore está vazia!!!\n");
+//         return;
+//     }
+
+//     if (EExterno(t)) {
+//         //int q = 2; // número de termos de busca
+//         int N = MAX_ARQUIVOS; // número total de documentos
+//         int n1 = 0; // número de termos no documento 1
+//         int n2 = 0; // número de termos no documento 2
+//         int f1, f2; // número de ocorrências dos termos nos documentos 1 e 2
+//         double w1, w2; // peso dos termos nos documentos 1 e 2
+//         double r1, r2; // relevância dos documentos 1 e 2
+
+//         // Calcular n1 e f1
+//         n1 = strlen(t->NO.Chave);
+//         f1 = t->contagem[0];
+
+//         // Calcular n2 e f2
+//         n2 = strlen(t->NO.Chave);
+//         f2 = t->contagem[1];
+
+//         // Calcular w1 e w2
+//         w1 = f1 * log(N) / (2 * n1);
+//         w2 = f2 * log(N) / (2 * n2);
+
+//         // Calcular r1 e r2
+//         r1 = 1.0 / n1 * (w1 + w2);
+//         r2 = 1.0 / n2 * (w1 + w2);
+
+//         printf("Palavra %s encontrada:\n", t->NO.Chave);
+//         printf("Relevância do documento 1: %.2f\n", r1);
+//         printf("Relevância do documento 2: %.2f\n", r2);
+//     }
+//     else {
+//         CalcularRelevancia(termo1, t->NO.NInterno.Esq);
+//         CalcularRelevancia(termo1, t->NO.NInterno.Dir);
+//     }
+// }

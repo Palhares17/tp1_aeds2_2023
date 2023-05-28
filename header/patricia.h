@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 #define tam 200
 #define MAX_ARQUIVOS 50
@@ -47,3 +48,6 @@ Apontador InsereEntre(String k, Apontador *t, int i, char diff, int idDoc);
 Apontador Insere(String k, Apontador *t, int idDoc);
 void Pesquisa(String k, Apontador t);
 void ImprimirPalavras(Apontador t);
+
+void CalcularRelevancia(int numDocumentos, Apontador t, String termo);
+//void CalcularRelevancia(String termo1, Apontador t);
