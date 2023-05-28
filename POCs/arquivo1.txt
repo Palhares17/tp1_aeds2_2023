@@ -1,5 +1,5 @@
 Analisando o Impacto dos Bots Durante a Eleição Presidencial Brasileira de 2018 
-com Base nos Comentários do YouTube
+com Base nos Comentários do 
 
 A tendência de discutir política em Redes Sociais Online (RSOs) tem crescido 
 cada vez mais, especialmente em períodos eleitorais. Esse crescimento pode ser 
@@ -10,7 +10,7 @@ essa tendência e a grande quantidade de dados gerados pelos usuários dessas
 redes sociais, o objetivo deste trabalho é analisar o impacto dos bots durante 
 a candidatura de Fernando Haddad e Jair Messias Bolsonaro na eleição 
 presidencial brasileira de 2018 e, adicionalmente, seus possíveis eleitores, 
-utilizando comentários coletados do YouTube. Nossos resultados demonstram que, 
+utilizando comentários coletados do YouTube . Nossos resultados demonstram que, 
 considerando todos os usuários únicos do conjunto de dados coletado, 
 aproximadamente 71,44% deles foram considerados indecisos, 17,67% como 
 possíveis eleitores de Bolsonaro e 10,89% como possíveis eleitores de 

@@ -1,271 +1,104 @@
-#include "header/patricia.h"
-
+#include "./header/patricia.h"
 
 #define tam 200
+#define MAX_ARQUIVOS 50
 
 int main() {
     Apontador arvore = NULL; // Inicializa a árvore como vazia
 
     char palavra[tam];
 
-    FILE* f;
+    FILE* f[MAX_ARQUIVOS];
+    char arquivos[MAX_ARQUIVOS][50];
 
-    char arquivo[] = "./POCs/gabriel.txt";
-
-    f = fopen(arquivo, "r");
-
-    if (f == NULL) {
-        printf("Erro ao abrir arquivo %s\n", arquivo);
+    // Abrir o arquivo de entrada e ler os nomes dos arquivos
+    FILE* entrada = fopen("entrada.txt", "r");
+    if (entrada == NULL) {
+        printf("Erro ao abrir o arquivo de entrada.\n");
         return 1;
     }
 
-    while (fscanf(f, "%s", palavra) == 1) {
-        arvore = Insere(palavra, &arvore);
+    // Lê o número de arquivos (N) do arquivo de entrada
+    int numArquivos;
+    if (fscanf(entrada, "%d", &numArquivos) != 1) {
+        printf("Erro ao ler o número de arquivos.\n");
+        fclose(entrada);
+        return 1;
     }
 
-    ImprimirPalavras(arvore);
+    // Verifica se o número de arquivos é válido
+    if (numArquivos <= 0 || numArquivos > MAX_ARQUIVOS) {
+        printf("Número inválido de arquivos.\n");
+        fclose(entrada);
+        return 1;
+    }
 
-    fclose(f);
+    // Lê os nomes dos arquivos do arquivo de entrada e armazena em arquivos
+    for (int i = 0; i < numArquivos; i++) {
+        if (fscanf(entrada, "%s", arquivos[i]) != 1) {
+            printf("Erro ao ler o nome do arquivo %d.\n", i + 1);
+            fclose(entrada);
+            return 1;
+        }
+    }
+
+    // Fecha o arquivo de entrada
+    fclose(entrada);
+
+    // Construir o caminho para a pasta "POCs"
+    char caminho[100];
+    sprintf(caminho, "./POCs/");
+
+    // Abrir os arquivos e processar as palavras
+    for (int i = 0; i < numArquivos; i++) {
+        char caminhoCompleto[150];
+        sprintf(caminhoCompleto, "%s%s", caminho, arquivos[i]);
+
+        f[i] = fopen(caminhoCompleto, "r");
+        if (f[i] == NULL) {
+            printf("Erro ao abrir o arquivo %s\n", arquivos[i]);
+            for (int j = 0; j < i; j++) {
+                fclose(f[j]);
+            }
+            return 1;
+        }
+    }
+
+    int idDoc = 1;
+    while (idDoc <= numArquivos) {
+        while (fscanf(f[idDoc - 1], "%s", palavra) == 1) {
+            // Remover caracteres especiais, acentuação e pontuação
+            int len = strlen(palavra);
+            for (int i = 0; i < len; i++) {
+                if (!isalnum((unsigned char) palavra[i])) {
+                    memmove(&palavra[i], &palavra[i + 1], len - i);
+                    len--;
+                    i--;
+                }
+            }
+
+            // Converter a palavra para minúsculas
+            for (int i = 0; i < len; i++) {
+                palavra[i] = tolower((unsigned char) palavra[i]);
+            }
+
+            arvore = Insere(palavra, &arvore, idDoc);
+        }
+        idDoc++;
+    }
+
+    // ImprimirPalavras(arvore);
+
+    // Pesquisa("tendencia", arvore);
+
+    char termo[tam];
+    printf("Digite o termo de busca: ");
+    scanf("%s", termo);
+    CalcularRelevancia(numArquivos, arvore, termo);
+
+    for (int i = 0; i < numArquivos; i++) {
+        fclose(f[i]);
+    }
 
     return 0;
 }
-
-
-
-
- // #include <stdlib.h>
-// // #include <stdio.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #define TRUE 1
-// #define FALSE !TRUE
-// #define D 8 /* depende de TipoChave */
-
-// typedef char* String;
-// typedef struct TipoPatNo* Apontador;
-// typedef unsigned char TipoIndexAmp;
-
-// typedef enum {
-//     Interno,
-//     Externo
-// } TipoNo;
-// typedef struct TipoPatNo {
-//     TipoNo TNo;
-//     union {
-//         struct { 
-//             TipoIndexAmp Index;
-//             char caractere;
-//             Apontador Esq, Dir;
-//         } NInterno;
-//         String Chave;
-//     } NO;
-// } TipoPatNo;
-
-
-// char Caractere(int i, String k) {
-//     return k[i];
-// }
-
-// short EExterno(Apontador p) {
-//     return p->TNo == Externo;
-// }
-
-// short EInterno(Apontador p) {
-//     return p->TNo == Interno;
-// }
-
-// Apontador CriaNoInt(int i, Apontador *Esq,  Apontador *Dir, char Caractere) { 
-// 	Apontador p;
-//     p = (Apontador)malloc(sizeof(TipoPatNo));  
-
-//     p->TNo = Interno;
-//     p->NO.NInterno.Esq = *Esq;
-//     p->NO.NInterno.Dir = *Dir;
-
-//     p->NO.NInterno.Index = i;
-//     p->NO.NInterno.caractere = Caractere;
-
-//     return p;
-// }
-
-// Apontador CriaNoExt(String k, Apontador *t) {
-// 	Apontador p;
-//     p = (Apontador)malloc(sizeof(TipoPatNo));
-//     p->TNo = Externo;
-
-//     p->NO.Chave = (String)malloc(strlen(k) * sizeof(char));
-//     strcpy(p->NO.Chave, k);
-
-//     return p;
-// }
-
-// Apontador InsereEntre(String k, Apontador *t, int i, char diff) {
-// 	Apontador p;
-
-//     if (EExterno(*t)) {
-//         p = CriaNoExt(k, &p);
-//         /* cria um novo no externo */
-//         if (strcmp((*t)->NO.Chave, k) < 0) {
-//            return (CriaNoInt(i, t, &p, diff));
-//         }
-//         else {
-//            return (CriaNoInt(i, &p, t, diff));
-//         }
-//     }
-
-//     else if (i < (*t)->NO.NInterno.Index) {
-//         CriaNoExt(k, &p);
-
-//         if (k[i] < diff) {
-//             return (CriaNoInt(i, &p, t, diff));
-//         } 
-//         else {
-//             return (CriaNoInt(i, t, &p, diff));
-//         }
-//     }
-
-//     else {
-//         int i = (*t)->NO.NInterno.Index;
-
-//         if (Caractere((*t)->NO.NInterno.Index, k) >= (*t)->NO.NInterno.caractere) {
-//             (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff);
-//         }
-//         else {
-//             (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i, diff);
-//         }
-//     }
-
-//     return (*t);
-// }
-
-// Apontador Insere(String k, Apontador *t) {
-    
-//     Apontador p;
-//     int i;
-//     char caractere;
-//     char charDiff;
-
-//     // printf("Entrou na funcao!!!"); 
-//     if (*t == NULL) {
-//         return (CriaNoExt(k, &p));
-//     }
-
-//     else {
-//         p = *t;
-
-//         while (!EExterno(p)) { // Verifica se é interno 
-//             if (p->NO.NInterno.Index > strlen(k)) {
-//                 caractere = k[strlen(k)];
-//             }
-//             else {
-//                 caractere = Caractere(p->NO.NInterno.Index, k);
-//             }
-
-//             if (caractere < p->NO.NInterno.caractere) {
-//                 p = p->NO.NInterno.Esq;
-//             }
-//             else {
-//                 p = p->NO.NInterno.Dir;
-//             }
-//         }
-
-//         if (strcmp(k, p->NO.Chave) == 0) {
-//             //printf("A palavra já está na arvore: %s\n", p->NO.Chave);
-//             return (*t);
-//         }
-//         else {
-//             i = 0;
-
-//             while (Caractere(i, k) == Caractere(i, p->NO.Chave)) i++;
-
-//             if (Caractere(i, k) >  Caractere(i, p->NO.Chave)) {
-//                 charDiff = k[i];
-//             }
-//             else {
-//                 charDiff = k[i];
-//             }
-
-//             return InsereEntre(k, t, i, charDiff);
-//         }
-//     }
-// }
-
-// void Pesquisa(String k, Apontador t) {
-//     if (t == NULL) printf("Arvore está vazia!!!");
-
-// 	if (EExterno(t)) {
-// 		if (strncmp(k, t->NO.Chave, strlen(k)) == 0) {
-// 			printf("Palavra %s encontrada:\n", t->NO.Chave);
-// 		}
-// 	}
-//     else {
-//         Pesquisa(k, t->NO.NInterno.Esq);
-//         Pesquisa(k, t->NO.NInterno.Dir);
-//     }
-// }
-
-// // void print(Apontador t) {
-// //     if (t == NULL) return;
-
-// //     if (!EExterno(t)) print(t->NO.NInterno.Esq);
-    
-// //     printf("%s\n", t->NO.Chave);
-
-// //     if(!EExterno(t)) print(t->NO.NInterno.Dir);
-// // }
-
-// void ImprimirPalavras(Apontador t) {
-//     if (t == NULL)
-//         return;
-
-//     if (EExterno(t))
-//         printf("%s\n", t->NO.Chave);
-//     else {
-//         ImprimirPalavras(t->NO.NInterno.Esq);
-//         ImprimirPalavras(t->NO.NInterno.Dir);
-//     }
-// }
-
-
-// #define tam 200
-
-// int main() {
-//     Apontador arvore = NULL; // Inicializa a árvore como vazia
-
-//     char palavra[tam];
-
-//     FILE *f;
-    
-//     char arquivo[] = "./POCs/gabriel.txt";
-
-//     f = fopen(arquivo, "r");
-
-//     if (f == NULL) {
-//         printf("Erro ao abrir arquivo %s\t", arquivo);
-//         return 1;
-//     }
-
-//     while (fscanf(f, "%s", palavra) == 1) {
-//         arvore = Insere(palavra, &arvore);
-//         //print(arvore);
-//     }
-    
-//     ImprimirPalavras(arvore);
-
-
-//     //Pesquisa("aaaaa", arvore);
-//     //print(arvore);
-
-//     // printf("\n################# Pesquisando chave: #################\n");
-//     // char* pesquisaChar = "te";
-//     // Pesquisa(pesquisaChar, a);
-
-//     // int i = 0;
-//     // while(i < 5){
-//     //     print(arvore);
-//     //     i++;
-//     // }
-
-//     return 0;
-// }
